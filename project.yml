@@ -1,0 +1,57 @@
+﻿# 项目配置文件 (XcodeGen)
+# 用于在 GitHub Actions macOS runner 上自动生成 .xcodeproj
+
+name: SmartGlassesVision
+
+options:
+  bundleIdPrefix: com.smartglasses
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "16.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    TARGETED_DEVICE_FAMILY: "1"  # iPhone only
+    INFOPLIST_FILE: Resources/Info.plist
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    PRODUCT_BUNDLE_IDENTIFIER: com.smartglasses.vision
+
+targets:
+  SmartGlassesVision:
+    type: application
+    platform: iOS
+    sources:
+      - Sources/SmartGlassesVision
+    dependencies:
+      - framework: Pods/MobileVLCKit/VLCKit.xcframework
+      - package: RxSwift
+        product: RxSwift
+      - package: RxSwift
+        product: RxCocoa
+      - package: Alamofire
+
+    settings:
+      base:
+        INFOPLIST_FILE: Resources/Info.plist
+        PRODUCT_NAME: SmartGlassesVision
+        PRODUCT_BUNDLE_IDENTIFIER: com.smartglasses.vision
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/SmartGlassesVision/Shared/Bridging-Header.h
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+
+packages:
+  RxSwift:
+    url: https://github.com/ReactiveX/RxSwift
+    from: 6.10.2
+  Alamofire:
+    url: https://github.com/Alamofire/Alamofire
+    from: 5.12.0
+
+preBuildScripts:
+  - name: CocoaPods
+    script: |
+      if [ -x "" ]; then
+        pod install 2>/dev/null || true
+      fi
+    basedOnDependencyAnalysis: false
